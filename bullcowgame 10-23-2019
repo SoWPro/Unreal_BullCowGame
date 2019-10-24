@@ -1,0 +1,166 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#include "BullCowCartridge.h"
+#include "HiddenWordList.h"
+
+void UBullCowCartridge::BeginPlay() // When the game starts
+{
+    Super::BeginPlay();
+    SetupGame();//setup game
+
+    //PrintLine(TEXT("The Hidden Word is: %s. \nIt is %i characters long."), *HiddenWord, HiddenWord.Len());//debug line
+    
+   PrintLine(TEXT("The number of possible words is %i"), Words.Num());
+    
+}
+
+void UBullCowCartridge::OnInput(const FString& Input) // When the player hits enter
+{
+ 
+   if(bGameOver)
+  {
+      ClearScreen();
+      SetupGame();
+  }
+  else
+  {   
+    ProcessGuess(Input);
+  }   /*if game is over: ClearScreen() and ReSetup() game
+    else check player guess*/
+
+    
+   
+
+}
+
+void UBullCowCartridge::SetupGame()
+{
+    HiddenWord = TEXT("cake");//set the hiddenword or call function for a hiddenword
+    Lives = HiddenWord.Len();//set number of lives
+    bGameOver = false;
+
+    PrintLine(TEXT("Welcome to Bulls and Cows"));
+    PrintLine(TEXT("Guess the %i letter word!"), HiddenWord.Len());//Magic number
+    PrintLine(TEXT("Type in your guess. \nPlease enter to continue...."));//prompt player for guess
+
+
+    const TCHAR HW[] = TEXT("cakes");
+}
+
+void UBullCowCartridge::EndGame()
+{
+    bGameOver = true;
+    PrintLine(TEXT("Please press enter to Play Again!"));
+   
+}
+
+void UBullCowCartridge::ProcessGuess(FString Guess)
+{
+  
+   if(Guess == HiddenWord)
+    {
+        PrintLine(TEXT("Congrats you won!"));
+        EndGame();
+        return;
+    }
+
+    //else if (word not isogram)
+        //mention it's not issogram, subtract life? May just want to wait until valid guess.
+          //check if it's actually a word
+//any of above ask to guess again
+    
+    
+        //reduce number of lives by 1
+    //check number of lives
+        //if >0 
+     
+        
+    //check if right number of characters
+    if(Guess.Len() != HiddenWord.Len())
+    {
+        int32 word = HiddenWord.Len();
+        PrintLine(TEXT("Please put in an %i letter word. \n You have lost a life. You have %i remaining."), word, Lives);
+               
+    }
+    if(!IsIsogram(Guess))
+    {
+        PrintLine(TEXT("Word needs to be without repeating letters. Please guess again."));
+    }
+    
+    //reduce number of lives by 1
+    //check number of lives
+        //if >0 
+    --Lives;
+    if(Lives==0)
+    {
+        PrintLine(TEXT("You have %i remain "), Lives);
+        PrintLine(TEXT("Hidden Word is: %s"), *HiddenWord);
+        PrintLine(TEXT("Unfortuanely, you have lost."));
+        EndGame();
+        return;
+    }
+    else
+    {
+        PrintLine(TEXT("Guess again. You have %i lives left. "),Lives);
+    }
+  
+
+    
+    
+       
+}
+
+bool UBullCowCartridge::IsIsogram(FString Word) const
+{
+    for(int32 index = 0, Comparison = index+1; Comparison < Word.Len() && index < Word.Len(); Comparison++)
+  {
+      if(Word[index]== Word[Comparison])
+      {
+          return false;
+      }
+      else
+      {
+          index++;
+      }
+      
+  }
+   // PrintLine(TEXT("I'm in the Isogram function."));
+//    for(int32 index=0; index<Word.Len(); index++)
+//    {
+   
+//          for(int32 Comparison= index+1; Comparison < Word.Len(); Comparison++)
+//         {
+//             //PrintLine(TEXT("I'm in the for loop of isogram function."));
+//             if (Word[index]==Word[Comparison])
+//             {
+//                    // PrintLine(TEXT("I'm in the if statement in the for loop of isogram function."));
+
+//                 return false;
+//             }
+//         }
+//    }
+    // for(int i =0; i<Word.Len(); i++)
+    // {
+        
+    //     PrintLine(TEXT("%c"),Word[i]);
+    // }
+    //remeber the guess or input is -1
+    //probably need to create an array:checker
+    //initilize int counter
+    //initilize int charcounter
+    //create a loop, most likely counter<= hiddenword.len() 
+        //load counter into array:checker
+        //another loop
+            //compare to array's(if statment)
+            //if two match add 1 to charcounter
+            //if charcounter = 2
+                //return true
+        //return false;
+
+        //another way of doing would be  to start the array and check it up to a certain point
+            // example: input is cakes you have two loops, you only check it up against the last letter.
+                //So you have first time through loop. you compare c to c. since it's the array[0] checking otherarray[0]. it good
+                    //and incriments array[1], otherarray[0] go through rest of array until otherarray[1]. if it doesn't return true. else return false
+    return true;
+
+}
